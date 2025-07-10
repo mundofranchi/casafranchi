@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados de Búsqueda | Casa Franchi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap y estilos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body { background: #f4f4f4; font-family: 'Montserrat', sans-serif; }
+    .navbar { background-color: #ffe600; }
+    .producto-card { transition: box-shadow 0.3s; }
+    .producto-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .price { font-size: 1.2rem; font-weight: bold; color: #1b5e20; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+  <div class="container align-items-center">
+    <a class="navbar-brand d-flex align-items-center" href="/index.html">
+      <img src="./logo4.png" alt="Logo" style="height: 75px;">
+    </a>
+    <form class="d-flex flex-grow-1 mx-3 position-relative">
+      <input id="searchInput" class="form-control rounded-start border-0 shadow-sm" type="search" placeholder="Buscar productos..." aria-label="Search" autocomplete="off">
+      <button class="btn btn-light border-start-0 rounded-end" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+</nav>
+
+<!-- RESULTADOS -->
+<section class="container my-5">
+  <h2 class="mb-4" id="tituloBusqueda">Resultados</h2>
+  <div id="resultados" class="row gy-4"></div>
+</section>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDw-4Tm4FgNPhAHEbvcrjFXICzU3lXGD_g",
+    authDomain: "casafranchi-ff656.firebaseapp.com",
+    projectId: "casafranchi-ff656",
+    storageBucket: "casafranchi-ff656.appspot.com",
+    messagingSenderId: "336476209274",
+    appId: "1:336476209274:web:fba9994666d0656817bc3"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const resultadosContenedor = document.getElementById('resultados');
+  const params = new URLSearchParams(window.location.search);
+  const search = params.get('query')?.toLowerCase() || '';
+  document.getElementById('tituloBusqueda').textContent = `Resultados para: "${search}"`;
+
+  db.collection("productos").get().then(snapshot => {
+    const productos = [];
+    snapshot.forEach(doc => productos.push({ id: doc.id, ...doc.data() }));
+
+    const filtrados = productos.filter(p =>
+      p.producto?.toLowerCase().includes(search) ||
+      p.marca?.toLowerCase().includes(search) ||
+      p.caracteristica?.toLowerCase().includes(search)
+    );
+
+    if (filtrados.length === 0) {
+      resultadosContenedor.innerHTML = '<p class="text-muted">No se encontraron productos.</p>';
+      return;
+    }
+
+    filtrados.forEach(prod => {
+      const div = document.createElement('div');
+      div.className = 'col-md-4 col-lg-3';
+      div.innerHTML = `
+        <div class="card producto-card h-100">
+          <img src="data:image/jpeg;base64,${prod.imagen1_base64}" class="card-img-top" alt="${prod.producto}" style="height: 200px; object-fit: contain;">
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">${prod.producto}</h6>
+            <p class="card-text text-muted small">${prod.caracteristica || ''}</p>
+            <div class="price mb-2">$${Math.round(prod.csi_cem).toLocaleString()}</div>
+            <a href="detalleproducto.html?id=${prod.id}" class="btn btn-primary mt-auto">Ver producto</a>
+          </div>
+        </div>`;
+      resultadosContenedor.appendChild(div);
+    });
+  });
+
+  // Hacer que Enter y lupa vuelvan a buscar
+  const searchInput = document.getElementById('searchInput');
+  document.querySelector('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (query) {
+      window.location.href = `productosfiltrados.html?query=${encodeURIComponent(query)}`;
+    }
+  });
+</script>
+
+</body>
+</html>
