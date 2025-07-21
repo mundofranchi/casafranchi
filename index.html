@@ -104,6 +104,48 @@
       </div>
     </div>
   </section>
+ <section class="ofertas-relampago py-5 px-3">
+  <div class="text-center mb-4">
+    <h2 class="titulo-relampago">🔥 OFERTAS RELÁMPAGO DE LA SEMANA 🔥</h2>
+    <div class="mt-2">
+      <small id="reloj-oferta" class="fw-bold text-light" style="font-size: 1.1rem;"></small>
+    </div>
+  </div>
+  <div class="row" id="ofertas-relampago-container"></div>
+</section>
+
+<style>
+  .ofertas-relampago {
+  background: linear-gradient(to right, #ff0000, #660000);
+  border-top: 5px solid yellow;
+  border-bottom: 5px solid yellow;
+  color: white;
+}
+
+.titulo-relampago {
+  color: #fff700;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.card-relampago {
+  background: white;
+  border: 3px solid red;
+  box-shadow: 0 0 10px red;
+  transition: transform 0.2s ease;
+}
+
+.card-relampago:hover {
+  transform: scale(1.03);
+}
+
+.card-relampago img {
+  object-fit: cover;
+}
+
+</style>
+
+
   <!-- COMBOS EXCLUSIVOS -->
 <section id="combos" class="container my-5">
   <h2 class="section-title text-center mb-4">Combos Exclusivos</h2>
@@ -145,123 +187,6 @@
 }
 
   </style>
-
-  
-  <!-- MARCAS -->
-<section id="marcas" class="bg-dark py-5">
-  <div class="container">
-    <h2 class="text-center text-white mb-4">Nuestras Marcas</h2>
-    <div
-      id="carouselMarcas"
-      class="carousel slide"
-      data-bs-ride="carousel"
-      data-bs-interval="5000"
-      data-bs-pause="hover"
-    >
-      <div class="carousel-inner">
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <div class="row justify-content-center align-items-center gx-5">
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/DeWalt_Logo.svg/1200px-DeWalt_Logo.svg.png"
-                alt="DeWalt"
-                class="marca-logo"
-              >
-            </div>
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://www.underconsideration.com/brandnewawards/online/2013/wp-content/themes/twentyeleven_bnas/winners_images/149_01.png"
-                alt="Stanley"
-                class="marca-logo"
-              >
-            </div>
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Black%2BDecker_Logo.svg/2560px-Black%2BDecker_Logo.svg.png"
-                alt="Black & Decker"
-                class="marca-logo"
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <div class="row justify-content-center align-items-center gx-5">
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://images.seeklogo.com/logo-png/61/1/lusqtoff-logo-png_seeklogo-613214.png"
-                alt="Lusqtoff"
-                class="marca-logo"
-              >
-            </div>
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Bosch_logo.png"
-                alt="Bosch"
-                class="marca-logo"
-              >
-            </div>
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://smd.com.ar/wp-content/uploads/2021/03/bremen.jpg"
-                alt="Bremen"
-                class="marca-logo"
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-          <div class="row justify-content-center align-items-center gx-5">
-            <div class="col-6 col-md-4 col-lg-2 text-center">
-              <img
-                src="https://www.fixferreterias.com/media/home_brands/truper.png"
-                alt="Truper"
-                class="marca-logo"
-              >
-            </div>
-            <!-- opcionales para centrar -->
-            <div class="col-6 col-md-4 col-lg-2 empty-col"></div>
-            <div class="col-6 col-md-4 col-lg-2 empty-col"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controles estándar -->
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselMarcas"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselMarcas"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon"></span>
-      </button>
-    </div>
-  </div>
-</section>
-
-
-
-  
-<!-- BANNER PROMO -->
-  <section class="promo-ferre">
-    <img src="https://cdn.prod.website-files.com/64ca37391046bd0e764dc522/651fc9d000dfb92f044f61e3_Dentr-ferreteria.jpg"
-         alt="Promo Casa Franchi" class="w-100">
-    <div class="content">
-      <h2>Ferretería Online</h2>
-      <p class="lead">Recibí todo en casa, <strong>gratis</strong> y <strong>en cuotas sin interés</strong>.</p>
-      <a href="#productos" class="btn btn-warning">¡Comprá ahora!</a>
-    </div>
-  </section>
 
   
 
@@ -411,6 +336,57 @@
     setListeners();
   }
 
+  function renderOfertasRelampago() {
+  const contenedor = document.getElementById("ofertas-relampago-container");
+  if (!contenedor) return;
+
+  const ofertas = productos.filter(p => p.codigo?.toUpperCase().includes("OFERTA24"));
+  if (ofertas.length === 0) return;
+
+  contenedor.innerHTML = "";
+
+  ofertas.forEach(p => {
+    contenedor.innerHTML += `
+      <div class="col-md-4 mb-4">
+        <div class="card card-relampago h-100">
+          <img src="data:image/jpeg;base64,${p.imagen1_base64}" class="card-img-top" alt="${p.producto}">
+          <div class="card-body">
+            <h5 class="card-title text-dark fw-bold">${p.producto}</h5>
+            <p class="card-text text-danger fw-bold fs-5">$${p.cem}</p>
+            <div class="beneficios">🔥 Ofertas únicas • 6 cuotas sin interés</div>
+            <button class="btn btn-primary btn-comprar-ahora w-100 mt-3">Comprar ahora</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function iniciarCuentaRegresiva() {
+  const reloj = document.getElementById("reloj-oferta");
+  if (!reloj) return;
+
+  const ahora = new Date();
+  const finDelDia = new Date();
+  finDelDia.setHours(23, 59, 59, 999);
+
+  const intervalo = setInterval(() => {
+    const diferencia = finDelDia - new Date();
+    if (diferencia <= 0) {
+      clearInterval(intervalo);
+      reloj.textContent = "⏳ Oferta expirada";
+      return;
+    }
+
+    const h = Math.floor(diferencia / (1000 * 60 * 60));
+    const m = Math.floor((diferencia / (1000 * 60)) % 60);
+    const s = Math.floor((diferencia / 1000) % 60);
+    reloj.textContent = `⏰ Tiempo restante: ${h}h ${m}m ${s}s`;
+  }, 1000);
+}
+
+iniciarCuentaRegresiva();
+
   // Listeners de botones y productos
   function setListeners() {
     document.querySelectorAll('.js-ver-detalle').forEach(img => {
@@ -480,6 +456,33 @@
       }
     }
   });
+  // Sección OFERTAS RELÁMPAGO
+    const contenedorOfertas = document.getElementById('contenedorOfertas');
+
+    const ofertasRelampago = productos.filter(p =>
+      (p.producto?.toLowerCase().includes("oferta24") ||
+      p.caracteristica?.toLowerCase().includes("oferta24"))
+    );
+
+    // Mostrar máximo 4 al azar
+    const ofertasMostradas = ofertasRelampago.sort(() => 0.5 - Math.random()).slice(0, 4);
+
+    ofertasMostradas.forEach(oferta => {
+      const div = document.createElement('div');
+      div.className = 'col-md-3';
+      div.innerHTML = `
+        <div class="card card-fuego h-100 text-center">
+          <img src="data:image/jpeg;base64,${oferta.imagen1_base64}" class="card-img-top p-2" alt="${oferta.producto}" style="height: 200px; object-fit: contain;">
+          <div class="card-body">
+            <h5 class="card-title">${oferta.producto}</h5>
+            <p class="text-white small">${oferta.caracteristica || ''}</p>
+            <div class="price mb-2">$${Math.round(oferta.csi_cem).toLocaleString()}</div>
+            <a href="detalleproducto.html?id=${oferta.id}" class="btn btn-sm btn-light fw-bold">VER PRODUCTO</a>
+          </div>
+        </div>
+      `;
+      contenedorOfertas.appendChild(div);
+    });
 
 
 
@@ -576,6 +579,7 @@ function renderCombos() {
     renderProductos();
     renderProductosMasVendidos();
     renderCombos();
+    renderOfertasRelampago();
   });
 
   btnVerMas.addEventListener('click', renderProductos);
