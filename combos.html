@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Combos Exclusivos | Casa Franchi</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+  <style>
+    .combo-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+      transition: all 0.2s ease-in-out;
+    }
+    .combo-card img {
+      object-fit: cover;
+    }
+    .filter-btn {
+      margin-right: 10px;
+    }
+    .combo-card {
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      border-radius: 15px;
+      background: #fff;
+    }
+    .combo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg shadow-sm" style="background-color: #ffe600;">
+    <div class="container align-items-center">
+      <a class="navbar-brand d-flex align-items-center" href="/index.html">
+        <img src="./logo4.png" alt="Logo" style="height: 75px;" />
+      </a>
+      <form class="d-flex flex-grow-1 mx-3 position-relative">
+        <input id="searchInput" class="form-control rounded-start border-0 shadow-sm" type="search" placeholder="Buscar productos, marcas y más..." aria-label="Search" autocomplete="off">
+        <button class="btn btn-light border-start-0 rounded-end" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <div class="d-flex align-items-center gap-3">
+        <a href="#" class="text-dark fw-semibold text-decoration-none">Categorías</a>
+        <a href="#" class="text-dark"><i class="bi bi-person fs-5"></i></a>
+        <a href="#" class="text-dark"><i class="bi bi-cart fs-5"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <section class="bg-primary text-white text-center py-4">
+    <div class="container">
+      <h1 class="mb-0">Combos Exclusivos</h1>
+      <p class="lead">🔥 Aprovechá los mejores combos de herramientas en un solo lugar</p>
+    </div>
+  </section>
+
+  <!-- FILTROS -->
+  <div class="container my-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+      <div class="mb-3">
+        <button class="btn btn-outline-secondary filter-btn" onclick="ordenarCombos('asc')">Precio ↑</button>
+        <button class="btn btn-outline-secondary filter-btn" onclick="ordenarCombos('desc')">Precio ↓</button>
+      </div>
+      <select class="form-select w-auto" id="marcaSelect" onchange="filtrarPorMarca()">
+        <option value="">Todas las marcas</option>
+      </select>
+    </div>
+    <div class="row" id="combos-grid"></div>
+  </div>
+
+  <!-- FIREBASE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDw-4Tm4FgNPhAHEbvcrjFXICzU3lXGD_g",
+      authDomain: "casafranchi-ff656.firebaseapp.com",
+      projectId: "casafranchi-ff656",
+      storageBucket: "casafranchi-ff656.appspot.com",
+      messagingSenderId: "336476209274",
+      appId: "1:336476209274:web:fba9994666d0656817bc3"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
+  <!-- LÓGICA -->
+  <script>
+    let combos = [], combosFiltrados = [];
+
+    const grid = document.getElementById('combos-grid');
+    const marcaSelect = document.getElementById('marcaSelect');
+    const searchInput = document.getElementById('searchInput');
+
+    db.collection("productos").get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const p = { id: doc.id, ...doc.data() };
+        if (p.producto.toLowerCase().includes('combo')) combos.push(p);
+      });
+      renderCombos(combos);
+      cargarMarcas(combos);
+    });
+
+    function renderCombos(lista) {
+      grid.innerHTML = "";
+      lista.forEach(p => {
+        if (!p.imagen1_base64 || p.imagen1_base64.length < 50) return;
+
+        const div = document.createElement('div');
+        div.className = "col-lg-4 col-md-6 mb-4";
+
+        div.innerHTML = `
+          <div class="card combo-card h-100 shadow-sm border-0 p-2 text-center" style="border-radius: 15px;">
+            <img src="data:image/jpeg;base64,${p.imagen1_base64}" class="card-img-top rounded mb-3" alt="${p.producto}" style="max-height: 300px; object-fit: contain;">
+            <div class="card-body px-2">
+              <h5 class="fw-semibold">${p.producto}</h5>
+              <div class="text-uppercase text-secondary small mb-2">${p.marca || ''}</div>
+              <div class="fs-5 fw-bold text-primary mb-2">$${Math.round(p.cem).toLocaleString()}</div>
+              <div class="text-warning small mb-3">🔥 Combos únicos · Envío gratis · 6 cuotas sin interés</div>
+              <button onclick="verDetalle('${p.id}')" class="btn btn-warning fw-bold text-dark w-100 py-2" style="border-radius: 10px;">COMPRAR AHORA</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function verDetalle(id) {
+      window.location.href = `detalleproducto.html?id=${id}`;
+    }
+
+    function ordenarCombos(direccion) {
+      const ordenados = [...combosFiltrados.length ? combosFiltrados : combos].sort((a, b) => {
+        return direccion === 'asc' ? a.cem - b.cem : b.cem - a.cem;
+      });
+      renderCombos(ordenados);
+    }
+
+    function cargarMarcas(lista) {
+      const marcasUnicas = [...new Set(lista.map(p => p.marca).filter(Boolean))].sort();
+      marcasUnicas.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        marcaSelect.appendChild(opt);
+      });
+    }
+
+    function filtrarPorMarca() {
+      const marca = marcaSelect.value;
+      if (!marca) {
+        combosFiltrados = [];
+        renderCombos(combos);
+        return;
+      }
+      combosFiltrados = combos.filter(p => p.marca === marca);
+      renderCombos(combosFiltrados);
+    }
+
+    document.querySelector('form button').addEventListener('click', e => {
+      e.preventDefault();
+      const search = searchInput.value.trim();
+      if (search) window.location.href = `productosfiltrados.html?query=${encodeURIComponent(search)}`;
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
