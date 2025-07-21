@@ -172,21 +172,67 @@
     </div>
   </section>
   <style>
-    /* === COMBOS EXCLUSIVOS === */
+    /* === COMBOS EXCLUSIVOS ESTILO MÁS GRANDE === */
 #combos .card {
-  border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-}
-#combos .card:hover {
-  transform: scale(1.02);
-}
-#combos .card .price {
-  font-weight: bold;
-  font-size: 18px;
-  color: #0400ff;
+  padding: 16px;
+  min-height: 100%;
 }
 
+#combos .card:hover {
+  transform: scale(1.03);
+}
+
+#combos .card img {
+  max-height: 260px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+#combos .card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  text-align: center;
+}
+
+#combos .card-text {
+  font-size: 1rem;
+  color: #444;
+  text-align: center;
+}
+
+#combos .price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0400ff;
+  text-align: center;
+  margin: 12px 0;
+}
+
+#combos .beneficios {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+#combos .btn-comprar-ahora {
+  background: #ffee00;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 12px;
+  margin-top: 1rem;
+  border: none;
+  transition: background 0.3s ease;
+}
+
+#combos .btn-comprar-ahora:hover {
+  background: #fff000;
+}
 
   </style>
 
