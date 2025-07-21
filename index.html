@@ -141,6 +141,7 @@
 
 .card-relampago img {
   object-fit: cover;
+  height: 400px;
 }
 
 </style>
@@ -185,6 +186,7 @@
   font-size: 18px;
   color: #0400ff;
 }
+
 
   </style>
 
@@ -266,11 +268,7 @@
         </div>
         <div class="col-md-4">
           <h5>Contacto</h5>
-          <small>📞 11 2233 4455<br>📧 info@mundofranchi.com</small>
-        </div>
-        <div class="col-md-4">
-          <h5>Seguinos</h5>
-          <small><a href=\"#\">Instagram</a> | <a href=\"#\">Facebook</a> | <a href=\"#\">WhatsApp</a></small>
+          <small>📞 11 2498-9866<br>📧 ariel@casafranchi.com.ar</small>
         </div>
       </div>
       <small class="d-block mt-3">&copy; 2025 Casa Franchi. Todos los derechos reservados.</small>
@@ -345,22 +343,27 @@
 
   contenedor.innerHTML = "";
 
-  ofertas.forEach(p => {
+  ofertas.forEach((p, i) => {
+    const idx = productos.findIndex(prod => prod.id === p.id); // buscamos el índice real
     contenedor.innerHTML += `
       <div class="col-md-4 mb-4">
-        <div class="card card-relampago h-100">
-          <img src="data:image/jpeg;base64,${p.imagen1_base64}" class="card-img-top" alt="${p.producto}">
+        <div class="card card-relampago h-100 producto-card" data-index="${idx}">
+          <img src="data:image/jpeg;base64,${p.imagen1_base64}" class="card-img-top js-ver-detalle" alt="${p.producto}" style="cursor:pointer;">
           <div class="card-body">
             <h5 class="card-title text-dark fw-bold">${p.producto}</h5>
             <p class="card-text text-danger fw-bold fs-5">$${p.cem}</p>
             <div class="beneficios">🔥 Ofertas únicas • 6 cuotas sin interés</div>
             <button class="btn btn-primary btn-comprar-ahora w-100 mt-3">Comprar ahora</button>
+            <button class="btn btn-outline-primary btn-agregar-carrito w-100 mt-2">Agregar al carrito</button>
           </div>
         </div>
       </div>
     `;
   });
+
+  setListeners(); // para que se activen los clics
 }
+
 
 function iniciarCuentaRegresiva() {
   const reloj = document.getElementById("reloj-oferta");
