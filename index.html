@@ -332,6 +332,42 @@
   }
 </style>
 
+<section class="py-5 bg-white text-dark" id="lusqtoff-section">
+  <div class="container text-center">
+    <h2 class="display-5 fw-bold mb-5" style="color:#f7931e">SOMOS DISTRIBUIDORES OFICIALES DE LUSQTOFF</h2>
+    <div class="row" id="lusqtoff-grid"></div>
+    <div class="mt-4">
+      <a href="lusqtoff.html" class="btn btn-lg fw-bold" style="background-color:#f7931e; color:white;">Ver más productos Lusqtoff</a>
+    </div>
+  </div>
+</section>
+<style>
+  .lusq-card {
+  background: #fff;
+  border: 2px solid #f7931e;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.lusq-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.lusq-img-wrapper {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lusq-img {
+  max-height: 100%;
+  object-fit: contain;
+}
+
+</style>
+
+
+
 <script>
   // ================================
   // Suponemos que ya inicializaste Firebase antes
@@ -517,6 +553,54 @@
   });
 
   setListeners(); // para que se activen los clics
+}
+function renderLusqtoff() {
+  const grid = document.getElementById("lusqtoff-grid");
+  if (!grid) return;
+
+  const lusqtoff = productos.filter(p =>
+    p.marca?.toLowerCase().includes("lusqtoff") && p.imagen1_base64?.length > 50
+  ).slice(0, 30);
+
+  lusqtoff.forEach((prod) => {
+    const div = document.createElement("div");
+    div.className = "col-md-3 mb-5";
+
+    div.innerHTML = `
+      <div class="lusq-card p-3 rounded shadow-sm h-100 d-flex flex-column align-items-center" data-id="${prod.id}">
+        <div class="lusq-img-wrapper mb-3">
+          <img src="data:image/jpeg;base64,${prod.imagen1_base64}" alt="${prod.producto}" class="img-fluid lusq-img js-ver-detalle" style="cursor:pointer;">
+        </div>
+        <h6 class="text-uppercase fw-bold mb-2" style="font-size: 0.9rem;">${prod.producto}</h6>
+        <p class="text-muted small mb-2">${prod.caracteristica || ''}</p>
+        <div class="price fw-bold text-dark fs-5 mb-3">$${Math.round(prod.cem).toLocaleString()}</div>
+        <button class="btn btn-dark btn-sm w-100 mb-2 btn-ver-producto">VER PRODUCTO</button>
+        <button class="btn btn-outline-dark btn-sm w-100 btn-agregar-carrito">AGREGAR AL CARRITO</button>
+      </div>
+    `;
+
+    grid.appendChild(div);
+  });
+
+  // Listeners mejorados
+  grid.querySelectorAll('.btn-ver-producto, .lusq-img').forEach(el => {
+    el.addEventListener('click', e => {
+      const id = e.target.closest('.lusq-card').getAttribute('data-id');
+      window.location.href = `detalleproducto.html?id=${id}`;
+    });
+  });
+
+  grid.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const id = e.target.closest('.lusq-card').getAttribute('data-id');
+      const prod = productos.find(p => p.id === id);
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito.push(prod);
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      alert(`"${prod.producto}" agregado al carrito.`);
+      actualizarContadorCarrito?.();
+    });
+  });
 }
 
 
@@ -738,6 +822,7 @@ function renderCombos() {
     renderProductosMasVendidos();
     renderCombos();
     renderOfertasRelampago();
+    renderLusqtoff();
   });
 
   btnVerMas.addEventListener('click', renderProductos);
